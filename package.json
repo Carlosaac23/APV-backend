@@ -1,0 +1,13 @@
+{
+  "name": "apv-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js"
+  },
+  "keywords": [],
+  "author": "Carlos",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.0"
+}
