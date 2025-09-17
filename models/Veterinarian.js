@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import generateToken from '../helpers/generateToken.js';
 
 const veterinarianSchema = mongoose.Schema({
   name: {
@@ -27,6 +28,7 @@ const veterinarianSchema = mongoose.Schema({
   },
   token: {
     type: String,
+    default: generateToken(),
   },
   verify: {
     type: Boolean,
