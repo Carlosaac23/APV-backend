@@ -95,17 +95,35 @@ async function forgotPassword(req, res) {
 
 async function verifyToken(req, res) {
   const { token } = req.params;
-  const validToken = await Veterinarian.findOne({ token });
 
-  if (validToken) {
-    res.json({ msg: 'Token válido' });
-  } else {
+  const validToken = await Veterinarian.findOne({ token });
+  if (!validToken) {
     const error = new Error('Token no válido');
     return res.status(400).json({ msg: error.message });
   }
+
+  res.json({ msg: 'Token válido' });
 }
 
-function newPassword(req, res) {}
+async function newPassword(req, res) {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  const veterinarian = await Veterinarian.findOne({ token });
+  if (!veterinarian) {
+    const error = new Error('Hubo un error');
+    return res.status(400).json({ msg: error.message });
+  }
+
+  try {
+    veterinarian.token = null;
+    veterinarian.password = password;
+    await veterinarian.save();
+    res.json({ msg: 'Contraseña Guardada Correctamente' });
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 export {
   register,
