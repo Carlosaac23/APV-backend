@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 
 const connectDB = async () => {
-  const mongoUri = process.env.MONGO_URI;
+  const { MONGO_URI } = process.env;
 
   try {
-    const db = await mongoose.connect(mongoUri);
+    const db = await mongoose.connect(MONGO_URI);
 
     const url = `${db.connection.host}:${db.connection.port}`;
     console.log(`MongoDB conectado en: ${url}`);
