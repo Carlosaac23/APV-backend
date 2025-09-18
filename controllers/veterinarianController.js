@@ -1,5 +1,6 @@
 import Veterinarian from '../models/Veterinarian.js';
 import generateJWT from '../helpers/generateJWT.js';
+import generateToken from '../helpers/generateToken.js';
 
 async function register(req, res) {
   const { email } = req.body;
@@ -22,9 +23,8 @@ async function register(req, res) {
 }
 
 function profile(req, res) {
-  res.json({
-    msg: 'Mostrando perfil...',
-  });
+  const { veterinarian } = req;
+  res.json({ veterinarian });
 }
 
 async function verify(req, res) {
@@ -73,4 +73,46 @@ async function authenticate(req, res) {
   res.json({ token: generateJWT(user.id) });
 }
 
-export { register, profile, verify, authenticate };
+async function forgotPassword(req, res) {
+  const { email } = req.body;
+
+  const veterinarianExist = await Veterinarian.findOne({ email });
+  if (!veterinarianExist) {
+    const error = new Error('El usuario no existe');
+    return res.status(400).json({ msg: error.message });
+  }
+
+  try {
+    veterinarianExist.token = generateToken();
+    await veterinarianExist.save();
+    res.json({
+      msg: `Hemos enviado un email a ${email} con las instrucciones`,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function verifyToken(req, res) {
+  const { token } = req.params;
+  const validToken = await Veterinarian.findOne({ token });
+
+  if (validToken) {
+    res.json({ msg: 'Token válido' });
+  } else {
+    const error = new Error('Token no válido');
+    return res.status(400).json({ msg: error.message });
+  }
+}
+
+function newPassword(req, res) {}
+
+export {
+  register,
+  profile,
+  verify,
+  authenticate,
+  forgotPassword,
+  verifyToken,
+  newPassword,
+};
