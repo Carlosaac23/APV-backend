@@ -1,14 +1,16 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
-import router from './routes/veterinarianRoutes.js';
+import veterinarianRoutes from './routes/veterinarianRoutes.js';
+import patientRoutes from './routes/patientRoutes.js';
 
 const app = express();
 app.use(express.json());
 dotenv.config();
 connectDB();
 
-app.use('/api/veterinarians', router);
+app.use('/api/veterinarians', veterinarianRoutes);
+app.use('/api/patients', patientRoutes);
 
 const PORT = process.env.PORT || 4000;
 
