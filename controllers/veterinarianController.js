@@ -1,20 +1,27 @@
 import Veterinarian from '../models/Veterinarian.js';
 import generateJWT from '../helpers/generateJWT.js';
 import generateToken from '../helpers/generateToken.js';
+import emailRegister from '../helpers/emailRegister.js';
 
 async function register(req, res) {
-  const { email } = req.body;
+  const { name, email } = req.body;
 
   // Prevenir usuarios duplicados
   const userExist = await Veterinarian.findOne({ email });
   if (userExist) {
-    const error = new Error('Usuario ya registrado');
+    const error = new Error(`El correo ${email} ya está en uso.`);
     return res.status(400).json({ msg: error.message });
   }
 
   try {
     const veterinarian = new Veterinarian(req.body);
     const savedVeterinarian = await veterinarian.save();
+
+    emailRegister({
+      name,
+      email,
+      token: savedVeterinarian.token,
+    });
 
     res.json(savedVeterinarian);
   } catch (error) {
@@ -32,7 +39,7 @@ async function verify(req, res) {
 
   const verifyUser = await Veterinarian.findOne({ token });
   if (!verifyUser) {
-    const error = new Error('Token no válido');
+    const error = new Error('Token no válido.');
     return res.status(404).json({ msg: error.message });
   }
 
@@ -41,7 +48,7 @@ async function verify(req, res) {
     verifyUser.verify = true;
     await verifyUser.save();
 
-    res.json({ msg: 'Usuario Confirmado Correctamente' });
+    res.json({ msg: 'Usuario confirmado correctamente.' });
   } catch (error) {
     console.error(error);
   }
@@ -53,19 +60,19 @@ async function authenticate(req, res) {
   // Comprobar si el usuario existe
   const user = await Veterinarian.findOne({ email });
   if (!user) {
-    const error = new Error('El usuario no existe');
+    const error = new Error('El usuario no existe.');
     return res.status(403).json({ msg: error.message });
   }
 
   // Comprobar si el usuario está verificado
   if (!user.verify) {
-    const error = new Error('La cuenta no está verificada');
+    const error = new Error('La cuenta no está verificada.');
     return res.status(403).json({ msg: error.message });
   }
 
   // Revisar el password
   if (!(await user.verifyPassword(password))) {
-    const error = new Error('La contraseña es incorrecta');
+    const error = new Error('La contraseña es incorrecta.');
     return res.status(403).json({ msg: error.message });
   }
 
@@ -78,7 +85,7 @@ async function forgotPassword(req, res) {
 
   const veterinarianExist = await Veterinarian.findOne({ email });
   if (!veterinarianExist) {
-    const error = new Error('El usuario no existe');
+    const error = new Error('El usuario no existe.');
     return res.status(400).json({ msg: error.message });
   }
 
@@ -86,7 +93,7 @@ async function forgotPassword(req, res) {
     veterinarianExist.token = generateToken();
     await veterinarianExist.save();
     res.json({
-      msg: `Hemos enviado un email a ${email} con las instrucciones`,
+      msg: `Hemos enviado un email a ${email} con las instrucciones.`,
     });
   } catch (error) {
     console.error(error);
@@ -98,7 +105,7 @@ async function verifyToken(req, res) {
 
   const validToken = await Veterinarian.findOne({ token });
   if (!validToken) {
-    const error = new Error('Token no válido');
+    const error = new Error('Token no válido.');
     return res.status(400).json({ msg: error.message });
   }
 
@@ -111,7 +118,7 @@ async function newPassword(req, res) {
 
   const veterinarian = await Veterinarian.findOne({ token });
   if (!veterinarian) {
-    const error = new Error('Hubo un error');
+    const error = new Error('Hubo un error.');
     return res.status(400).json({ msg: error.message });
   }
 
@@ -119,7 +126,7 @@ async function newPassword(req, res) {
     veterinarian.token = null;
     veterinarian.password = password;
     await veterinarian.save();
-    res.json({ msg: 'Contraseña Guardada Correctamente' });
+    res.json({ msg: 'Contraseña guardada correctamente.' });
   } catch (error) {
     console.error(error);
   }
