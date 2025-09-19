@@ -1,9 +1,19 @@
 import express from 'express';
-import { addPatient, getPatients } from '../controllers/patientControllers.js';
+import {
+  addPatient,
+  getPatients,
+  getPatient,
+  updatePatient,
+  deletePatient,
+} from '../controllers/patientControllers.js';
 import checkAuth from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.route('/').post(checkAuth, addPatient).get(getPatients);
-
+router.route('/').post(checkAuth, addPatient).get(checkAuth, getPatients);
+router
+  .route('/:id')
+  .get(checkAuth, getPatient)
+  .put(checkAuth, updatePatient)
+  .delete(checkAuth, deletePatient);
 export default router;
