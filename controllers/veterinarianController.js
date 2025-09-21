@@ -78,7 +78,12 @@ async function authenticate(req, res) {
   }
 
   // Autenticar
-  res.json({ token: generateJWT(user.id) });
+  res.json({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    token: generateJWT(user.id),
+  });
 }
 
 async function forgotPassword(req, res) {
