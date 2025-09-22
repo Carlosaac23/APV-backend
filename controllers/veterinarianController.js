@@ -145,6 +145,34 @@ async function newPassword(req, res) {
   }
 }
 
+async function updateProfile(req, res) {
+  const veterinarian = await Veterinarian.findById(req.params.id);
+  if (!veterinarian) {
+    const error = new Error('Hubo un error');
+    return res.status(400).json({ msg: error.message });
+  }
+  const { email } = req.body;
+  if (veterinarian.email !== req.body.email) {
+    const emailExist = await Veterinarian.findOne({ email });
+    if (emailExist) {
+      const error = new Error('Ese email ya está en uso');
+      return res.status(400).json({ msg: error.message });
+    }
+  }
+
+  try {
+    veterinarian.name = req.body.name;
+    veterinarian.email = req.body.email;
+    veterinarian.web = req.body.web;
+    veterinarian.phone = req.body.phone;
+
+    const updatedVeterinarian = await veterinarian.save();
+    res.json(updatedVeterinarian);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export {
   register,
   profile,
@@ -153,4 +181,5 @@ export {
   forgotPassword,
   verifyToken,
   newPassword,
+  updateProfile,
 };
