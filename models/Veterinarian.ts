@@ -1,8 +1,17 @@
+import {
+  IVeterinarian,
+  IVeterinarianMethods,
+  VeterinarianModel,
+} from '../types/veterinarian.js';
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import generateToken from '../helpers/generateToken.ts';
 
-const veterinarianSchema = new Schema({
+const veterinarianSchema = new Schema<
+  IVeterinarian,
+  IVeterinarianMethods,
+  VeterinarianModel
+>({
   name: {
     type: String,
     required: true,
@@ -52,5 +61,8 @@ veterinarianSchema.methods.verifyPassword = async function (
   return await bcrypt.compare(formPassword, this.password);
 };
 
-const Veterinarian = model('Veterinarian', veterinarianSchema);
+const Veterinarian = model<IVeterinarian, VeterinarianModel>(
+  'Veterinarian',
+  veterinarianSchema
+);
 export default Veterinarian;
