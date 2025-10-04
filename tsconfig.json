@@ -20,6 +20,5 @@
     "noEmit": true,
     "allowImportingTsExtensions": true
   },
-  "include": ["types"],
   "exclude": ["node_modules", "dist"]
 }
