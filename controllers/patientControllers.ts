@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import Patient from '../models/Patient.ts';
 
 async function addPatient(req: Request, res: Response) {

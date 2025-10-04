@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import Veterinarian from '../models/Veterinarian.ts';
 import generateJWT from '../helpers/generateJWT.ts';
 import generateToken from '../helpers/generateToken.ts';
