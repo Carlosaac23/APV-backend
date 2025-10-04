@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-const patientSchema = mongoose.Schema(
+const patientSchema = new Schema(
   {
     name: {
       type: String,
@@ -24,7 +24,7 @@ const patientSchema = mongoose.Schema(
       required: true,
     },
     veterinarian: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'Veterinarian',
     },
   },
@@ -33,5 +33,5 @@ const patientSchema = mongoose.Schema(
   }
 );
 
-const Patient = mongoose.model('Patient', patientSchema);
+const Patient = model('Patient', patientSchema);
 export default Patient;

@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import generateToken from '../helpers/generateToken.js';
 
-const veterinarianSchema = mongoose.Schema({
+const veterinarianSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -46,9 +46,11 @@ veterinarianSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-veterinarianSchema.methods.verifyPassword = async function (formPassword) {
+veterinarianSchema.methods.verifyPassword = async function (
+  formPassword: string
+) {
   return await bcrypt.compare(formPassword, this.password);
 };
 
-const Veterinarian = mongoose.model('Veterinarian', veterinarianSchema);
+const Veterinarian = model('Veterinarian', veterinarianSchema);
 export default Veterinarian;
