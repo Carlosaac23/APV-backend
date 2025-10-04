@@ -1,16 +1,23 @@
 import nodemailer from 'nodemailer';
+import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
 
-export default async function emailRegister(data) {
+interface Data {
+  name: string;
+  email: string;
+  token: string;
+}
+
+export default async function emailRegister(data: Data) {
   const { EMAIL_USER, EMAIL_PASS, EMAIL_HOST, EMAIL_PORT } = process.env;
 
   const transport = nodemailer.createTransport({
     host: EMAIL_HOST,
-    port: EMAIL_PORT,
+    port: Number(EMAIL_PORT),
     auth: {
       user: EMAIL_USER,
       pass: EMAIL_PASS,
     },
-  });
+  } as SMTPTransport.Options);
 
   const { name, email, token } = data;
   const { FRONTEND_URL } = process.env;
