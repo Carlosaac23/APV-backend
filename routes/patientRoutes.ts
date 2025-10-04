@@ -5,8 +5,8 @@ import {
   getPatient,
   updatePatient,
   deletePatient,
-} from '../controllers/patientControllers.js';
-import checkAuth from '../middleware/authMiddleware.js';
+} from '../controllers/patientControllers.ts';
+import checkAuth from '../middleware/authMiddleware.ts';
 
 const router = express.Router();
 

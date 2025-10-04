@@ -9,8 +9,8 @@ import {
   newPassword,
   updateProfile,
   updatePassword,
-} from '../controllers/veterinarianController.js';
-import checkAuth from '../middleware/authMiddleware.js';
+} from '../controllers/veterinarianController.ts';
+import checkAuth from '../middleware/authMiddleware.ts';
 
 const router = express.Router();
 
