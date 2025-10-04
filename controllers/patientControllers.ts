@@ -30,7 +30,10 @@ async function getPatient(req: Request, res: Response) {
     return res.status(404).json({ msg: error.message });
   }
 
-  if (String(patient.veterinarian._id) !== String(req.veterinarian._id)) {
+  if (
+    !patient.veterinarian ||
+    String(patient.veterinarian._id) !== String(req.veterinarian._id)
+  ) {
     return res.json({ msg: 'Acción No Válida' });
   }
 
@@ -46,7 +49,10 @@ async function updatePatient(req: Request, res: Response) {
     return res.status(404).json({ msg: error.message });
   }
 
-  if (String(patient.veterinarian._id) !== String(req.veterinarian._id)) {
+  if (
+    !patient.veterinarian ||
+    String(patient.veterinarian._id) !== String(req.veterinarian._id)
+  ) {
     return res.json({ msg: 'Acción No Válida' });
   }
 
@@ -55,7 +61,7 @@ async function updatePatient(req: Request, res: Response) {
   patient.owner = req.body.owner || patient.owner;
   patient.email = req.body.email || patient.email;
   patient.date = req.body.date || patient.date;
-  patient.sympstoms = req.body.sympstoms || patient.sympstoms;
+  patient.symptoms = req.body.symptoms || patient.symptoms;
 
   try {
     const updatedPatient = await patient.save();
@@ -74,7 +80,10 @@ async function deletePatient(req: Request, res: Response) {
     return res.status(404).json({ msg: error.message });
   }
 
-  if (String(patient.veterinarian._id) !== String(req.veterinarian._id)) {
+  if (
+    !patient.veterinarian ||
+    String(patient.veterinarian._id) !== String(req.veterinarian._id)
+  ) {
     return res.json({ msg: 'Acción No Válida' });
   }
 
