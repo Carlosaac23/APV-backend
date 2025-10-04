@@ -17,8 +17,9 @@
     "types": ["node"],
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    "allowImportingTsExtensions": true
   },
-  "include": ["src", "index.d.ts"],
+  "include": ["types"],
   "exclude": ["node_modules", "dist"]
 }
