@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import type { JwtPayload } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken';
-import Veterinarian from '../models/Veterinarian.js';
+import Veterinarian from '../models/Veterinarian.ts';
 
 interface DecodedToken extends JwtPayload {
   id: string;
