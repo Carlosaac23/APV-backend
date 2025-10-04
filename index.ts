@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import type { CorsOptions } from 'cors';
 import connectDB from './config/db.js';
 import veterinarianRoutes from './routes/veterinarianRoutes.js';
 import patientRoutes from './routes/patientRoutes.js';
@@ -12,7 +13,7 @@ connectDB();
 
 const { FRONTEND_URL } = process.env;
 const allowedDomains = [FRONTEND_URL];
-const corsOptions = {
+const corsOptions: CorsOptions = {
   origin: function (origin, callback) {
     if (allowedDomains.indexOf(origin) !== -1) {
       callback(null, true);
