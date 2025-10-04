@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import type { CorsOptions } from 'cors';
-import connectDB from './config/db.js';
+import connectDB from './config/db.ts';
 import veterinarianRoutes from './routes/veterinarianRoutes.ts';
 import patientRoutes from './routes/patientRoutes.ts';
 
