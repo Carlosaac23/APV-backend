@@ -1,7 +1,6 @@
-import type { Request, Response } from 'express';
-import Patient from '../models/Patient.ts';
+import Patient from '@/models/Patient.js';
 
-async function addPatient(req: Request, res: Response) {
+async function addPatient(req, res) {
   const patient = new Patient(req.body);
   patient.veterinarian = req.veterinarian._id;
 
@@ -13,7 +12,7 @@ async function addPatient(req: Request, res: Response) {
   }
 }
 
-async function getPatients(req: Request, res: Response) {
+async function getPatients(req, res) {
   const patients = await Patient.find()
     .where('veterinarian')
     .equals(req.veterinarian);
@@ -21,7 +20,7 @@ async function getPatients(req: Request, res: Response) {
   res.json(patients);
 }
 
-async function getPatient(req: Request, res: Response) {
+async function getPatient(req, res) {
   const { id } = req.params;
   const patient = await Patient.findById(id);
 
@@ -40,7 +39,7 @@ async function getPatient(req: Request, res: Response) {
   res.json(patient);
 }
 
-async function updatePatient(req: Request, res: Response) {
+async function updatePatient(req, res) {
   const { id } = req.params;
   const patient = await Patient.findById(id);
 
@@ -71,7 +70,7 @@ async function updatePatient(req: Request, res: Response) {
   }
 }
 
-async function deletePatient(req: Request, res: Response) {
+async function deletePatient(req, res) {
   const { id } = req.params;
   const patient = await Patient.findById(id);
 

@@ -1,11 +1,10 @@
-import type { Request, Response } from 'express';
-import Veterinarian from '../models/Veterinarian.ts';
-import generateJWT from '../helpers/generateJWT.ts';
-import generateToken from '../helpers/generateToken.ts';
-import emailRegister from '../helpers/emailRegister.ts';
-import emailForgotPassword from '../helpers/emailForgotPassword.ts';
+import emailForgotPassword from '@/helpers/emailForgotPassword.js';
+import emailRegister from '@/helpers/emailRegister.js';
+import generateJWT from '@/helpers/generateJWT.js';
+import generateToken from '@/helpers/generateToken.js';
+import Veterinarian from '@/models/Veterinarian.js';
 
-async function register(req: Request, res: Response) {
+async function register(req, res) {
   const { name, email } = req.body;
 
   // Prevenir usuarios duplicados
@@ -31,12 +30,12 @@ async function register(req: Request, res: Response) {
   }
 }
 
-function profile(req: Request, res: Response) {
+function profile(req, res) {
   const { veterinarian } = req;
   res.json(veterinarian);
 }
 
-async function verify(req: Request, res: Response) {
+async function verify(req, res) {
   const { token } = req.params;
 
   const verifyUser = await Veterinarian.findOne({ token });
@@ -56,7 +55,7 @@ async function verify(req: Request, res: Response) {
   }
 }
 
-async function authenticate(req: Request, res: Response) {
+async function authenticate(req, res) {
   const { email, password } = req.body;
 
   // Comprobar si el usuario existe
@@ -87,7 +86,7 @@ async function authenticate(req: Request, res: Response) {
   });
 }
 
-async function forgotPassword(req: Request, res: Response) {
+async function forgotPassword(req, res) {
   const { email } = req.body;
 
   const veterinarianExist = await Veterinarian.findOne({ email });
@@ -114,7 +113,7 @@ async function forgotPassword(req: Request, res: Response) {
   }
 }
 
-async function verifyToken(req: Request, res: Response) {
+async function verifyToken(req, res) {
   const { token } = req.params;
 
   const validToken = await Veterinarian.findOne({ token });
@@ -126,7 +125,7 @@ async function verifyToken(req: Request, res: Response) {
   res.json({ msg: 'Token válido' });
 }
 
-async function newPassword(req: Request, res: Response) {
+async function newPassword(req, res) {
   const { token } = req.params;
   const { password } = req.body;
 
@@ -146,7 +145,7 @@ async function newPassword(req: Request, res: Response) {
   }
 }
 
-async function updateProfile(req: Request, res: Response) {
+async function updateProfile(req, res) {
   const veterinarian = await Veterinarian.findById(req.params.id);
   if (!veterinarian) {
     const error = new Error('Hubo un error');
@@ -174,7 +173,7 @@ async function updateProfile(req: Request, res: Response) {
   }
 }
 
-async function updatePassword(req: Request, res: Response) {
+async function updatePassword(req, res) {
   // Leer datos
   const { id } = req.veterinarian;
   const { actual_password, new_password } = req.body;
