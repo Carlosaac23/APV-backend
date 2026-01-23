@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import Veterinarian from '@/models/Veterinarian.js';
+import Veterinarian from '../models/Veterinarian.js';
 
 export default async function checkAuth(req, res, next) {
   let { authorization: token } = req.headers;

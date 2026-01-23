@@ -1,4 +1,4 @@
-import Patient from '@/models/Patient.js';
+import Patient from '../models/Patient.js';
 
 async function addPatient(req, res) {
   const patient = new Patient(req.body);

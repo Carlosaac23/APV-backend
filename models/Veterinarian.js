@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 
-import generateToken from '@/helpers/generateToken.js';
+import generateToken from '../helpers/generateToken.js';
 
 const veterinarianSchema = new Schema({
   name: {

@@ -1,8 +1,8 @@
-import emailForgotPassword from '@/helpers/emailForgotPassword.js';
-import emailRegister from '@/helpers/emailRegister.js';
-import generateJWT from '@/helpers/generateJWT.js';
-import generateToken from '@/helpers/generateToken.js';
-import Veterinarian from '@/models/Veterinarian.js';
+import emailForgotPassword from '../helpers/emailForgotPassword.js';
+import emailRegister from '../helpers/emailRegister.js';
+import generateJWT from '../helpers/generateJWT.js';
+import generateToken from '../helpers/generateToken.js';
+import Veterinarian from '../models/Veterinarian.js';
 
 async function register(req, res) {
   const { name, email } = req.body;

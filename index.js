@@ -1,10 +1,10 @@
-import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
+import dotenv from 'dotenv';
+import express from 'express';
 
-import connectDB from './config/db.ts';
-import veterinarianRoutes from './routes/veterinarianRoutes.ts';
-import patientRoutes from './routes/patientRoutes.ts';
+import connectDB from './config/db.js';
+import patientRoutes from './routes/patientRoutes.js';
+import veterinarianRoutes from './routes/veterinarianRoutes.js';
 
 const app = express();
 app.use(express.json());
