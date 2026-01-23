@@ -1,12 +1,13 @@
 import express from 'express';
+
 import {
   addPatient,
   getPatients,
   getPatient,
   updatePatient,
   deletePatient,
-} from '../controllers/patientControllers.ts';
-import checkAuth from '../middleware/authMiddleware.ts';
+} from '../controllers/patientControllers.js';
+import checkAuth from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 

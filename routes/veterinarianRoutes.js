@@ -1,4 +1,5 @@
 import express from 'express';
+
 import {
   register,
   profile,
@@ -9,8 +10,8 @@ import {
   newPassword,
   updateProfile,
   updatePassword,
-} from '../controllers/veterinarianController.ts';
-import checkAuth from '../middleware/authMiddleware.ts';
+} from '../controllers/veterinarianController.js';
+import checkAuth from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
