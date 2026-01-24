@@ -1,9 +1,7 @@
 import Veterinarian from '../models/Veterinarian.js';
 
-export const register = async (req, res) => {
+export async function registerVeterinarian(req, res) {
   const { email } = req.body;
-
-  // Prevent duplicate users
   const isEmailTaken = await Veterinarian.findOne({ email });
 
   if (isEmailTaken) {
@@ -12,11 +10,30 @@ export const register = async (req, res) => {
   }
 
   try {
-    // Save new veterinarian
     const veterinarian = new Veterinarian(req.body);
     const savedVeterinarian = await veterinarian.save();
     res.json(savedVeterinarian);
   } catch (error) {
     console.error(error);
   }
-};
+}
+
+export async function confirmAccount(req, res) {
+  const { token } = req.params;
+  const accountToBeConfirmed = await Veterinarian.findOne({ token });
+
+  if (!accountToBeConfirmed) {
+    const error = new Error('Token no válido');
+    return res.status(404).json({ msg: error.message });
+  }
+
+  try {
+    accountToBeConfirmed.token = null;
+    accountToBeConfirmed.confirm = true;
+    await accountToBeConfirmed.save();
+
+    res.json({ msg: 'Cuenta confirmada correctamente.' });
+  } catch (error) {
+    console.error(error);
+  }
+}
