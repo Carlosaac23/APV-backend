@@ -6,6 +6,6 @@ import {
 } from '../controllers/veterinarianController.js';
 
 router.post('/', registerVeterinarian);
-router.get('/confirm', confirmAccount);
+router.get('/confirm/:token', confirmAccount);
 
 export default router;
