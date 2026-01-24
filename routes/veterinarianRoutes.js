@@ -1,7 +1,11 @@
 import e from 'express';
 const router = e.Router();
-import { register } from '../controllers/veterinarianController.js';
+import {
+  registerVeterinarian,
+  confirmAccount,
+} from '../controllers/veterinarianController.js';
 
-router.post('/', register);
+router.post('/', registerVeterinarian);
+router.get('/confirm', confirmAccount);
 
 export default router;
