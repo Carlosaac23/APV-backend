@@ -139,7 +139,6 @@
   },
   "env": {
     "builtin": true,
-    "browser": true,
     "node": true
   },
   "globals": {},
