@@ -23,7 +23,7 @@ export async function confirmAccount(req, res) {
   const accountToBeConfirmed = await Veterinarian.findOne({ token });
 
   if (!accountToBeConfirmed) {
-    const error = new Error('Token no válido');
+    const error = new Error('Token no válido.');
     return res.status(404).json({ msg: error.message });
   }
 
@@ -36,4 +36,22 @@ export async function confirmAccount(req, res) {
   } catch (error) {
     console.error(error);
   }
+}
+
+export async function authenticateVeterinarian(req, res) {
+  const { email } = req.body;
+  const userExists = await Veterinarian.findOne({ email });
+
+  if (!userExists) {
+    const error = new Error('El usuario no existe.');
+    return res.status(403).json({ msg: error.message });
+  }
+
+  if (!userExists.confirm) {
+    const error = new Error('La cuenta no ha sido confirmada.');
+    return res.status(403).json({ msg: error.message });
+  }
+
+  console.log('Sí existe...');
+  res.json({ msg: 'Autenticando usuario...' });
 }
