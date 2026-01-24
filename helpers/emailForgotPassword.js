@@ -28,4 +28,6 @@ export default async function emailForgotPassword(data) {
 
       <p>Si tú no creaste esta cuenta, puedes ignorar este mensaje.</p> `,
   });
+
+  console.log('Mensaje enviado: %s', info.messageId);
 }
