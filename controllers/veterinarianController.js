@@ -39,16 +39,24 @@ export async function confirmAccount(req, res) {
 }
 
 export async function authenticateVeterinarian(req, res) {
-  const { email } = req.body;
+  const { email, password } = req.body;
   const userExists = await Veterinarian.findOne({ email });
 
+  // Check if user exists
   if (!userExists) {
     const error = new Error('El usuario no existe.');
     return res.status(403).json({ msg: error.message });
   }
 
+  // Check if user has confirmed his account
   if (!userExists.confirm) {
     const error = new Error('La cuenta no ha sido confirmada.');
+    return res.status(403).json({ msg: error.message });
+  }
+
+  // Check password
+  if (!(await userExists.checkPassword(password))) {
+    const error = new Error('Contraseña incorrecta.');
     return res.status(403).json({ msg: error.message });
   }
 
