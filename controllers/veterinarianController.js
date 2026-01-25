@@ -1,3 +1,4 @@
+import { generateJWT } from '../helpers/generateJWT.js';
 import Veterinarian from '../models/Veterinarian.js';
 
 export async function registerVeterinarian(req, res) {
@@ -23,7 +24,7 @@ export async function confirmAccount(req, res) {
   const accountToBeConfirmed = await Veterinarian.findOne({ token });
 
   if (!accountToBeConfirmed) {
-    const error = new Error('Token no válido');
+    const error = new Error('Token no válido.');
     return res.status(404).json({ msg: error.message });
   }
 
@@ -36,4 +37,29 @@ export async function confirmAccount(req, res) {
   } catch (error) {
     console.error(error);
   }
+}
+
+export async function authenticateVeterinarian(req, res) {
+  const { email, password } = req.body;
+  const userExists = await Veterinarian.findOne({ email });
+
+  // Check if user exists
+  if (!userExists) {
+    const error = new Error('El usuario no existe.');
+    return res.status(403).json({ msg: error.message });
+  }
+
+  // Check if user has confirmed his account
+  if (!userExists.confirm) {
+    const error = new Error('La cuenta no ha sido confirmada.');
+    return res.status(403).json({ msg: error.message });
+  }
+
+  // Check password
+  if (!(await userExists.checkPassword(password))) {
+    const error = new Error('Contraseña incorrecta.');
+    return res.status(403).json({ msg: error.message });
+  }
+
+  res.json({ token: generateJWT(userExists.id) });
 }

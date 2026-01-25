@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 
 import { generateId } from '../helpers/generateId.js';
@@ -36,6 +37,18 @@ const veterinarianSchema = mongoose.Schema({
     default: false,
   },
 });
+
+veterinarianSchema.pre('save', async function () {
+  if (!this.isModified('password')) {
+    return;
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+veterinarianSchema.methods.checkPassword = async function (formPassword) {
+  return await bcrypt.compare(formPassword, this.password);
+};
 
 const Veterinarian = mongoose.model('Veterinarian', veterinarianSchema);
 export default Veterinarian;
