@@ -1,3 +1,4 @@
+import { generateJWT } from '../helpers/generateJWT.js';
 import Veterinarian from '../models/Veterinarian.js';
 
 export async function registerVeterinarian(req, res) {
@@ -60,6 +61,5 @@ export async function authenticateVeterinarian(req, res) {
     return res.status(403).json({ msg: error.message });
   }
 
-  console.log('Sí existe...');
-  res.json({ msg: 'Autenticando usuario...' });
+  res.json({ token: generateJWT(userExists.id) });
 }
