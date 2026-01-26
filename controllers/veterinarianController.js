@@ -92,6 +92,36 @@ export async function forgotPassword(req, res) {
   }
 }
 
-export function resetPasswordToken(req, res) {}
+export async function resetPasswordToken(req, res) {
+  const { token } = req.params;
+  const veterinarian = await Veterinarian.findOne({ token });
 
-export function resetPassword(req, res) {}
+  if (!veterinarian) {
+    const error = new Error('Token no válido.');
+    return res.status(400).json({ msg: error.message });
+  }
+
+  res.json({ msg: 'Token válido y el usuario existe.' });
+}
+
+export async function resetPassword(req, res) {
+  const { token } = req.params;
+  const { password } = req.body;
+  const veterinarian = await Veterinarian.findOne({ token });
+
+  if (!veterinarian) {
+    const error = new Error('Hubo un error.');
+    return res.status(400).json({ msg: error.message });
+  }
+
+  try {
+    console.log(veterinarian);
+    veterinarian.password = password;
+    veterinarian.token = null;
+    await veterinarian.save();
+
+    res.json({ msg: 'Contraseña modificada correctamente.' });
+  } catch (error) {
+    console.error(error);
+  }
+}
