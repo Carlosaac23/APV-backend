@@ -25,7 +25,7 @@ export async function confirmVeterinarianAccount(req, res) {
   const veterinarian = await Veterinarian.findOne({ token });
 
   if (!veterinarian) {
-    const error = new Error('Token no válido.');
+    const error = new Error('Token inválido.');
     return res.status(404).json({ msg: error.message });
   }
 
@@ -73,7 +73,6 @@ export function getVeterinarianProfile(req, res) {
 export async function forgotPassword(req, res) {
   const { email } = req.body;
   const veterinarian = await Veterinarian.findOne({ email });
-  console.log(veterinarian);
 
   if (!veterinarian) {
     const error = new Error('El usuario no existe.');
@@ -85,19 +84,19 @@ export async function forgotPassword(req, res) {
     await veterinarian.save();
 
     res.json({
-      msg: `Hemos enviado un correo a ${email} con los siguientes pasos.`,
+      msg: `Se ha enviado un correo a ${email} con instrucciones para restablecer tu contraseña.`,
     });
   } catch (error) {
     console.error(error);
   }
 }
 
-export async function resetPasswordToken(req, res) {
+export async function validateResetPasswordToken(req, res) {
   const { token } = req.params;
   const veterinarian = await Veterinarian.findOne({ token });
 
   if (!veterinarian) {
-    const error = new Error('Token no válido.');
+    const error = new Error('Token inválido.');
     return res.status(400).json({ msg: error.message });
   }
 
@@ -110,7 +109,7 @@ export async function resetPassword(req, res) {
   const veterinarian = await Veterinarian.findOne({ token });
 
   if (!veterinarian) {
-    const error = new Error('Hubo un error.');
+    const error = new Error('Token inválido o expirado.');
     return res.status(400).json({ msg: error.message });
   }
 
