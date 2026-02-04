@@ -20,7 +20,7 @@ export async function getPatients(req, res) {
   res.json(patients);
 }
 
-export async function getPatient(req, res) {
+export async function getPatientById(req, res) {
   const { patientID } = req.params;
   const patient = await Patient.findById(patientID);
 
@@ -33,6 +33,6 @@ export async function getPatient(req, res) {
   }
 }
 
-export async function updatePatient(req, res) {}
+export async function updatePatientById(req, res) {}
 
-export async function deletePatient(req, res) {}
+export async function deletePatientById(req, res) {}
