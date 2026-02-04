@@ -5,7 +5,7 @@ import {
   confirmVeterinarianAccount,
   authenticateVeterinarian,
   forgotPassword,
-  resetPasswordToken,
+  validateResetPasswordToken,
   resetPassword,
   getVeterinarianProfile,
 } from '../controllers/veterinarianController.js';
@@ -18,7 +18,7 @@ router.post('/login', authenticateVeterinarian);
 router.post('/forgot-password', forgotPassword);
 router
   .route('/forgot-password/:token')
-  .get(resetPasswordToken)
+  .get(validateResetPasswordToken)
   .post(resetPassword);
 
 // Private routes
