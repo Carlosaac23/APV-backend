@@ -12,4 +12,10 @@ export async function addPatient(req, res) {
   }
 }
 
-export function getPatient(req, res) {}
+export async function getPatients(req, res) {
+  const patients = await Patient.find()
+    .where('veterinarian')
+    .equals(req.veterinarian);
+
+  res.json(patients);
+}
