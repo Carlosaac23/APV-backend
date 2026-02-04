@@ -19,3 +19,20 @@ export async function getPatients(req, res) {
 
   res.json(patients);
 }
+
+export async function getPatient(req, res) {
+  const { patientID } = req.params;
+  const patient = await Patient.findById(patientID);
+
+  if (String(patient.veterinarian._id) !== String(req.veterinarian._id)) {
+    return res.json({ msg: 'Acción no válida.' });
+  }
+
+  if (patient) {
+    res.json(patient);
+  }
+}
+
+export async function updatePatient(req, res) {}
+
+export async function deletePatient(req, res) {}
