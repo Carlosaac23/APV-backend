@@ -33,6 +33,7 @@ const patientSchema = mongoose.Schema(
   }
 );
 
-const Patient = mongoose.model('Patient', patientSchema);
+/** @type {mongoose.Model<any>} */
 
+const Patient = mongoose.model('Patient', patientSchema);
 export default Patient;

@@ -50,5 +50,7 @@ veterinarianSchema.methods.checkPassword = async function (formPassword) {
   return await bcrypt.compare(formPassword, this.password);
 };
 
+/** @type {mongoose.Model<any>} */
+
 const Veterinarian = mongoose.model('Veterinarian', veterinarianSchema);
 export default Veterinarian;
