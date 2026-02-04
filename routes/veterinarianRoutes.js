@@ -1,15 +1,17 @@
-import e from 'express';
-const router = e.Router();
+import { Router } from 'express';
+
 import {
   registerVeterinarian,
   confirmVeterinarianAccount,
   authenticateVeterinarian,
   forgotPassword,
-  resetPasswordToken,
+  validateResetPasswordToken,
   resetPassword,
   getVeterinarianProfile,
 } from '../controllers/veterinarianController.js';
 import { checkAuth } from '../middleware/authMiddleware.js';
+
+const router = Router();
 
 // Public routes
 router.post('/', registerVeterinarian);
@@ -18,7 +20,7 @@ router.post('/login', authenticateVeterinarian);
 router.post('/forgot-password', forgotPassword);
 router
   .route('/forgot-password/:token')
-  .get(resetPasswordToken)
+  .get(validateResetPasswordToken)
   .post(resetPassword);
 
 // Private routes

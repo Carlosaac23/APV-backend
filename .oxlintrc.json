@@ -139,7 +139,8 @@
   },
   "env": {
     "builtin": true,
-    "node": true
+    "node": true,
+    "browser": true
   },
   "globals": {},
   "ignorePatterns": []
