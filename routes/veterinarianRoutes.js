@@ -1,5 +1,5 @@
-import e from 'express';
-const router = e.Router();
+import { Router } from 'express';
+
 import {
   registerVeterinarian,
   confirmVeterinarianAccount,
@@ -10,6 +10,8 @@ import {
   getVeterinarianProfile,
 } from '../controllers/veterinarianController.js';
 import { checkAuth } from '../middleware/authMiddleware.js';
+
+const router = Router();
 
 // Public routes
 router.post('/', registerVeterinarian);
