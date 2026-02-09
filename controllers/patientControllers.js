@@ -24,15 +24,65 @@ export async function getPatientById(req, res) {
   const { patientID } = req.params;
   const patient = await Patient.findById(patientID);
 
+  if (!patient) {
+    return res
+      .status(404)
+      .json({ msg: `Paciente con ID ${patient} no encontrado.` });
+  }
+
   if (String(patient.veterinarian._id) !== String(req.veterinarian._id)) {
     return res.json({ msg: 'Acción no válida.' });
   }
 
-  if (patient) {
-    res.json(patient);
+  res.json(patient);
+}
+
+export async function updatePatientById(req, res) {
+  const { patientID } = req.params;
+  const patient = await Patient.findById(patientID);
+
+  if (!patient) {
+    return res
+      .status(404)
+      .json({ msg: `Paciente con ID ${patientID} no encontrado.` });
+  }
+
+  if (String(patient.veterinarian._id) !== String(req.veterinarian._id)) {
+    return res.json({ msg: 'Acción no válida' });
+  }
+
+  patient.name = req.body.name || patient.name;
+  patient.owner = req.body.owner || patient.owner;
+  patient.email = req.body.email || patient.email;
+  patient.discharged = req.body.discharged || patient.discharged;
+  patient.symptoms = req.body.symptoms || patient.symptoms;
+
+  try {
+    const updatedPatient = await patient.save();
+    res.json(updatedPatient);
+  } catch (error) {
+    console.error(error);
   }
 }
 
-export async function updatePatientById(req, res) {}
+export async function deletePatientById(req, res) {
+  const { patientID } = req.params;
+  const patient = await Patient.findById(patientID);
 
-export async function deletePatientById(req, res) {}
+  if (!patient) {
+    return res
+      .status(404)
+      .json({ msg: `Paciente con ID ${patientID} no encontrado.` });
+  }
+
+  if (String(patient.veterinarian._id) !== String(req.veterinarian._id)) {
+    return res.json({ msg: 'Acción no válida' });
+  }
+
+  try {
+    await patient.deleteOne();
+    res.json({ msg: `Paciente ${patient.name} eliminado.` });
+  } catch (error) {
+    console.error(error);
+  }
+}
