@@ -1,19 +1,23 @@
 import { generateId } from '../helpers/generateId.js';
 import { generateJWT } from '../helpers/generateJWT.js';
+import { registerEmail } from '../helpers/registerEmail.js';
 import Veterinarian from '../models/Veterinarian.js';
 
 export async function registerVeterinarian(req, res) {
-  const { email } = req.body;
+  const { name, email } = req.body;
   const isEmailTaken = await Veterinarian.findOne({ email });
 
   if (isEmailTaken) {
-    const error = new Error(`El correo ${email} ya está en uso.`);
+    const error = new Error(`Email "${email}" is already in use.`);
     return res.status(400).json({ msg: error.message });
   }
 
   try {
     const veterinarian = new Veterinarian(req.body);
     const savedVeterinarian = await veterinarian.save();
+
+    registerEmail({ name, email, token: savedVeterinarian.token });
+
     res.json(savedVeterinarian);
   } catch (error) {
     console.error(error);
@@ -25,7 +29,7 @@ export async function confirmVeterinarianAccount(req, res) {
   const veterinarian = await Veterinarian.findOne({ token });
 
   if (!veterinarian) {
-    const error = new Error('Token inválido.');
+    const error = new Error('Invalid token.');
     return res.status(404).json({ msg: error.message });
   }
 
@@ -34,7 +38,7 @@ export async function confirmVeterinarianAccount(req, res) {
     veterinarian.confirm = true;
     await veterinarian.save();
 
-    res.json({ msg: 'Cuenta confirmada correctamente.' });
+    res.json({ msg: 'Account successfully confirmed.' });
   } catch (error) {
     console.error(error);
   }
