@@ -1,3 +1,4 @@
+import { forgotPasswordEmail } from '../helpers/forgotPasswordEmail.js';
 import { generateId } from '../helpers/generateId.js';
 import { generateJWT } from '../helpers/generateJWT.js';
 import { registerEmail } from '../helpers/registerEmail.js';
@@ -9,7 +10,7 @@ export async function registerVeterinarian(req, res) {
 
   if (isEmailTaken) {
     const error = new Error(`Email "${email}" is already in use.`);
-    return res.status(400).json({ msg: error.message });
+    return res.status(409).json({ msg: error.message });
   }
 
   try {
@@ -30,7 +31,7 @@ export async function confirmVeterinarianAccount(req, res) {
 
   if (!veterinarian) {
     const error = new Error('Invalid token.');
-    return res.status(404).json({ msg: error.message });
+    return res.status(401).json({ msg: error.message });
   }
 
   try {
@@ -50,20 +51,20 @@ export async function authenticateVeterinarian(req, res) {
 
   // Check if user exists
   if (!veterinarian) {
-    const error = new Error('El usuario no existe.');
-    return res.status(403).json({ msg: error.message });
+    const error = new Error('The user does not exist.');
+    return res.status(404).json({ msg: error.message });
   }
 
   // Check if user has confirmed his account
   if (!veterinarian.confirm) {
-    const error = new Error('La cuenta no ha sido confirmada.');
-    return res.status(403).json({ msg: error.message });
+    const error = new Error('The account has not been confirmed.');
+    return res.status(401).json({ msg: error.message });
   }
 
   // Check password
   if (!(await veterinarian.checkPassword(password))) {
-    const error = new Error('Contraseña incorrecta.');
-    return res.status(403).json({ msg: error.message });
+    const error = new Error('Invalid password.');
+    return res.status(401).json({ msg: error.message });
   }
 
   res.json({ token: generateJWT(veterinarian.id) });
@@ -79,16 +80,22 @@ export async function forgotPassword(req, res) {
   const veterinarian = await Veterinarian.findOne({ email });
 
   if (!veterinarian) {
-    const error = new Error('El usuario no existe.');
-    return res.status(400).json({ msg: error.message });
+    const error = new Error('The user does not exist.');
+    return res.status(404).json({ msg: error.message });
   }
 
   try {
     veterinarian.token = generateId();
     await veterinarian.save();
 
+    forgotPasswordEmail({
+      name: veterinarian.name,
+      email,
+      token: veterinarian.token,
+    });
+
     res.json({
-      msg: `Se ha enviado un correo a ${email} con instrucciones para restablecer tu contraseña.`,
+      msg: `An email has been sent to "${email}" with instructions to reset your password.`,
     });
   } catch (error) {
     console.error(error);
@@ -100,11 +107,11 @@ export async function validateResetPasswordToken(req, res) {
   const veterinarian = await Veterinarian.findOne({ token });
 
   if (!veterinarian) {
-    const error = new Error('Token inválido.');
-    return res.status(400).json({ msg: error.message });
+    const error = new Error('Invalid token.');
+    return res.status(401).json({ msg: error.message });
   }
 
-  res.json({ msg: 'Token válido y el usuario existe.' });
+  res.json({ msg: 'Valid token and user exists.' });
 }
 
 export async function resetPassword(req, res) {
@@ -113,8 +120,8 @@ export async function resetPassword(req, res) {
   const veterinarian = await Veterinarian.findOne({ token });
 
   if (!veterinarian) {
-    const error = new Error('Token inválido o expirado.');
-    return res.status(400).json({ msg: error.message });
+    const error = new Error('Invalid or expired token.');
+    return res.status(401).json({ msg: error.message });
   }
 
   try {
@@ -123,7 +130,7 @@ export async function resetPassword(req, res) {
     veterinarian.token = null;
     await veterinarian.save();
 
-    res.json({ msg: 'Contraseña modificada correctamente.' });
+    res.json({ msg: 'Password successfully changed.' });
   } catch (error) {
     console.error(error);
   }
