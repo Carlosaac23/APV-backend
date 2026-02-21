@@ -4,6 +4,19 @@ import { generateJWT } from '../helpers/generateJWT.js';
 import { registerEmail } from '../helpers/registerEmail.js';
 import Veterinarian from '../models/Veterinarian.js';
 
+function toPublicVeterinarian(veterinarianDoc) {
+  return {
+    id: veterinarianDoc._id,
+    name: veterinarianDoc.name,
+    email: veterinarianDoc.email,
+    phone: veterinarianDoc.phone,
+    web: veterinarianDoc.web,
+    confirm: veterinarianDoc.confirm,
+    createdAt: veterinarianDoc.createdAt,
+    updatedAt: veterinarianDoc.updatedAt,
+  };
+}
+
 export async function registerVeterinarian(req, res) {
   const { name, email } = req.body;
   const isEmailTaken = await Veterinarian.findOne({ email });
@@ -19,7 +32,10 @@ export async function registerVeterinarian(req, res) {
 
     registerEmail({ name, email, token: savedVeterinarian.token });
 
-    res.json(savedVeterinarian);
+    res.status(201).json({
+      msg: 'Account successfully created. Please check your email to confirm your account.',
+      veterinarian: toPublicVeterinarian(savedVeterinarian),
+    });
   } catch (error) {
     console.error(error);
   }
@@ -39,7 +55,7 @@ export async function confirmVeterinarianAccount(req, res) {
     veterinarian.confirm = true;
     await veterinarian.save();
 
-    res.json({ msg: 'Account successfully confirmed.' });
+    res.status(200).json({ msg: 'Account successfully confirmed.' });
   } catch (error) {
     console.error(error);
   }
@@ -94,7 +110,7 @@ export async function forgotPassword(req, res) {
       token: veterinarian.token,
     });
 
-    res.json({
+    res.status(200).json({
       msg: `An email has been sent to "${email}" with instructions to reset your password.`,
     });
   } catch (error) {
@@ -111,7 +127,7 @@ export async function validateResetPasswordToken(req, res) {
     return res.status(401).json({ msg: error.message });
   }
 
-  res.json({ msg: 'Valid token and user exists.' });
+  res.status(200).json({ msg: 'Valid token and user exists.' });
 }
 
 export async function resetPassword(req, res) {
@@ -130,7 +146,7 @@ export async function resetPassword(req, res) {
     veterinarian.token = null;
     await veterinarian.save();
 
-    res.json({ msg: 'Password successfully changed.' });
+    res.status(200).json({ msg: 'Password successfully changed.' });
   } catch (error) {
     console.error(error);
   }
