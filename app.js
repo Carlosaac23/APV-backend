@@ -30,7 +30,7 @@ app.use('/api/patients', patientRoutes);
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(4000, error => {
+app.listen(PORT, error => {
   if (error) {
     console.error('Error starting the server:', error);
     throw error;
