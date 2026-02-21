@@ -11,7 +11,7 @@ app.use(express.json());
 configDotenv();
 connectDB();
 
-const allowedDomains = ['http://localhost:5173'];
+const allowedDomains = [process.env.FRONTEND_URL];
 const corsOptions = {
   origin: (origin, callback) => {
     if (allowedDomains.indexOf(origin) !== -1) {
