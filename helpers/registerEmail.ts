@@ -1,6 +1,7 @@
+import type { VeterinarianEmail } from '../schemas/veterinarianSchema.js';
 import nodemailer from 'nodemailer';
-
-export async function registerEmail(data) {
+import type { Options } from 'nodemailer/lib/smtp-transport/index.js';
+export async function registerEmail(data: VeterinarianEmail) {
   const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
@@ -8,7 +9,7 @@ export async function registerEmail(data) {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD,
     },
-  });
+  } as Options);
 
   const { name, email, token } = data;
 
