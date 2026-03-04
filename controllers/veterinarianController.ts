@@ -99,7 +99,7 @@ export async function forgotPassword(req: Request, res: Response) {
   const veterinarian = await veterinarianClient.findOne({ email });
 
   if (!veterinarian) {
-    const error = new Error('The user does not exist.');
+    const error = new Error('An account with that email does not exist.');
     return res.status(404).json({ msg: error.message });
   }
 
