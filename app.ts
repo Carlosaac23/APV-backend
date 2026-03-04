@@ -3,6 +3,7 @@ import type { CorsOptions } from 'cors';
 import express from 'express';
 
 import { connectDB } from './db/client.js';
+import { patientRoutes } from './routes/patientRoutes.js';
 import { veterinarianRoutes } from './routes/veterinarianRoutes.js';
 
 const app = express();
@@ -24,7 +25,7 @@ const corsOptions: CorsOptions = {
 app.use(cors(corsOptions));
 
 app.use('/api/veterinarians', veterinarianRoutes);
-// app.use('/api/patients', patientRoutes);
+app.use('/api/patients', patientRoutes);
 
 const PORT = process.env.PORT || 4000;
 
