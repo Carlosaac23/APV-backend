@@ -3,6 +3,7 @@ import type { CorsOptions } from 'cors';
 import express from 'express';
 
 import { connectDB } from './db/client.js';
+import { connectDBMiddleware } from './middleware/connectDBMiddleware.js';
 import { patientRoutes } from './routes/patientRoutes.js';
 import { veterinarianRoutes } from './routes/veterinarianRoutes.js';
 
@@ -22,15 +23,7 @@ const corsOptions: CorsOptions = {
   },
 };
 
-app.use(async (_req, _res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
-
+app.use(connectDBMiddleware);
 app.use(cors(corsOptions));
 
 app.use('/api/veterinarians', veterinarianRoutes);
