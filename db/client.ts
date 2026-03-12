@@ -8,7 +8,7 @@ export async function connectDB() {
     connectionPromise = client
       .connect()
       .then(c => {
-        console.log('Conncted to MongoDB');
+        console.log('Connected to MongoDB');
         return c;
       })
       .catch(error => {
