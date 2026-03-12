@@ -19,8 +19,11 @@ export async function addPatient(req: Request, res: Response) {
       veterinarian: veterinarianRef!,
     };
 
-    await patientClient.insertOne(newPatient);
-    res.json(newPatient);
+    const result = await patientClient.insertOne(newPatient);
+    res.status(201).json({
+      msg: 'Patient successfully created.',
+      patient: { ...newPatient, _id: result.insertedId },
+    });
   } catch (error) {
     console.error(error);
   }
@@ -87,7 +90,7 @@ export async function updatePatientById(req: Request, res: Response) {
       { $set: newPatientValues }
     );
 
-    res.json(newPatientValues);
+    res.status(201).json({ msg: 'Patient successfully updated.' });
   } catch (error) {
     console.error(error);
   }
@@ -113,7 +116,7 @@ export async function deletePatientById(req: Request, res: Response) {
 
   try {
     await patientClient.deleteOne({ _id: new ObjectId(patientID as string) });
-    res.json({ msg: `Patient ${patient.name} deleted.` });
+    res.status(201).json({ msg: 'Patient successfully deleted.' });
   } catch (error) {
     console.error(error);
   }
