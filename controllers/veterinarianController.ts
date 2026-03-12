@@ -1,5 +1,6 @@
 import type { Veterinarian } from '../schemas/veterinarianSchema.js';
 import type { Request, Response } from 'express';
+import { ObjectId } from 'mongodb';
 
 import { client } from '../db/client.js';
 import { forgotPasswordEmail } from '../helpers/forgotPasswordEmail.js';
@@ -10,6 +11,7 @@ import { registerEmail } from '../helpers/registerEmail.js';
 import { validateHashedPassword } from '../helpers/validatePassword.js';
 
 const veterinarianClient = client.db('apv').collection('veterinarians');
+
 export async function registerVeterinarian(req: Request, res: Response) {
   const { name, email } = req.body;
   const isEmailTaken = await veterinarianClient.findOne({ email });
@@ -91,7 +93,7 @@ export async function authenticateVeterinarian(req: Request, res: Response) {
 
 export function getVeterinarianProfile(req: Request, res: Response) {
   const { veterinarian } = req;
-  res.json({ profile: veterinarian });
+  res.json(veterinarian);
 }
 
 export async function forgotPassword(req: Request, res: Response) {
@@ -159,6 +161,76 @@ export async function resetPassword(req: Request, res: Response) {
     );
 
     res.status(200).json({ msg: 'Password successfully changed.' });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function updateVeterinarianProfile(req: Request, res: Response) {
+  const { id } = req.params;
+  const veterinarian = await veterinarianClient.findOne({
+    _id: new ObjectId(id as string),
+  });
+
+  if (!veterinarian) {
+    const error = new Error('Veterinarian does not exist');
+    return res.status(404).json({ msg: error.message });
+  }
+
+  const { email } = req.body;
+  if (veterinarian.email !== req.body.email) {
+    const isEmailTaken = await veterinarianClient.findOne({ email });
+
+    if (isEmailTaken) {
+      const error = new Error(`Email "${email}" is already in use.`);
+      return res.status(409).json({ msg: error.message });
+    }
+  }
+
+  try {
+    const updatedVeterinarian = {
+      name: req.body.name,
+      email: req.body.email,
+      web: req.body.web,
+      phone: req.body.phone,
+    };
+
+    await veterinarianClient.updateOne(
+      { _id: new ObjectId(id as string) },
+      { $set: updatedVeterinarian }
+    );
+
+    res.status(200).json({ msg: 'Veterinarian successfully updated.' });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function updateVeterinarianPassword(req: Request, res: Response) {
+  const id = req.veterinarian?._id;
+  const { current_password: currentPassword, new_password: newPassword } =
+    req.body;
+  const veterinarian = await veterinarianClient.findOne({
+    _id: new ObjectId(id),
+  });
+
+  if (!veterinarian) {
+    const error = new Error('Veterinarian does not exist');
+    return res.status(404).json({ msg: error.message });
+  }
+
+  if (!(await validateHashedPassword(currentPassword, veterinarian.password))) {
+    const error = new Error('Current password is incorrect.');
+    return res.status(401).json({ msg: error.message });
+  }
+
+  try {
+    await veterinarianClient.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { password: await generateHashPassword(newPassword, 12) } }
+    );
+
+    res.status(200).json({ msg: 'Password successfully updated.' });
   } catch (error) {
     console.error(error);
   }
