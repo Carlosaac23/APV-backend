@@ -8,6 +8,8 @@ import {
   validateResetPasswordToken,
   resetPassword,
   getVeterinarianProfile,
+  updateVeterinarianProfile,
+  updateVeterinarianPassword,
 } from '../controllers/veterinarianController.js';
 import { checkAuth } from '../middleware/authMiddleware.js';
 
@@ -25,3 +27,9 @@ veterinarianRoutes
 
 // Private routes
 veterinarianRoutes.get('/profile', checkAuth, getVeterinarianProfile);
+veterinarianRoutes.put('/profile/:id', checkAuth, updateVeterinarianProfile);
+veterinarianRoutes.put(
+  '/update-password',
+  checkAuth,
+  updateVeterinarianPassword
+);
