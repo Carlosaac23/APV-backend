@@ -22,6 +22,15 @@ const corsOptions: CorsOptions = {
   },
 };
 
+app.use(async (_req, _res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.use(cors(corsOptions));
 
 app.use('/api/veterinarians', veterinarianRoutes);
