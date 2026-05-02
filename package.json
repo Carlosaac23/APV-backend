@@ -8,11 +8,13 @@
   "type": "module",
   "main": "app.ts",
   "scripts": {
-    "dev": "tsx watch --env-file-if-exists=.env.development app.ts",
+    "build": "tsc",
+    "dev": "tsx watch --env-file-if-exists=.env.development server.ts",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check"
+    "start": "node ./dist/server.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -21,7 +23,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.1.0",
     "nodemailer": "^8.0.1",
-    "zod": "^4.3.6"
+    "zod": "^4.4.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -30,8 +32,8 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.3.3",
     "@types/nodemailer": "^7.0.11",
-    "oxfmt": "^0.26.0",
+    "oxfmt": "^0.47.0",
     "oxlint": "^1.43.0",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   }
 }
