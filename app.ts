@@ -1,13 +1,14 @@
 import cors from 'cors';
 import type { CorsOptions } from 'cors';
 import express from 'express';
+import type { Express } from 'express';
 
 import { connectDB } from './db/client.js';
 import { connectDBMiddleware } from './middleware/connectDBMiddleware.js';
 import { patientRoutes } from './routes/patientRoutes.js';
 import { veterinarianRoutes } from './routes/veterinarianRoutes.js';
 
-const app = express();
+const app: Express = express();
 app.use(express.json());
 connectDB();
 
@@ -29,12 +30,4 @@ app.use(cors(corsOptions));
 app.use('/api/veterinarians', veterinarianRoutes);
 app.use('/api/patients', patientRoutes);
 
-const PORT = process.env.PORT || 4000;
-
-app.listen(PORT, (error: unknown) => {
-  if (error) {
-    console.error('Error starting the server:', error);
-    throw error;
-  }
-  console.log(`Server working on http://localhost:${PORT}`);
-});
+export default app;
